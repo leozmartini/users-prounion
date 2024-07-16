@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { userRepository } from "../repositories/userRepository";
 import { User } from "../entity/User";
 import { validate } from "class-validator";
+import bcrypt from "bcrypt";
 
 export const getUsers = async (req: Request, res: Response) => {
   try {
@@ -31,7 +32,8 @@ export const createUser = async (req: Request, res: Response) => {
     return res.status(400).json({ message: "name, email and password are required." });
   }
   try {
-    const user = await userRepository.create({ name, email, password });
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = await userRepository.create({ name, email, password: hashedPassword });
     const errors = await validate(user);
     if (errors.length > 0) {
       const errorMessages = errors.map(error => {
@@ -40,7 +42,9 @@ export const createUser = async (req: Request, res: Response) => {
       return res.status(400).json({ messages: errorMessages[0] });
     }
     await userRepository.save(user);
-    res.status(201).json(user);
+    const userWithoutPassword: Partial<User> = { ...user };
+    delete userWithoutPassword.password;
+    res.status(201).json(userWithoutPassword);
   } catch (error: any) {
     console.log(error.message);
     res.status(500).json({ message: "Internal Server Error" });
