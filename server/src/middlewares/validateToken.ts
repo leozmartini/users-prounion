@@ -11,8 +11,7 @@ const validateToken = (req: Request, res: Response, next: NextFunction) => {
 
   try {
     const secretKey = process.env.JWT_SECRET as string;
-    const decoded = jwt.verify(token, secretKey);
-    console.log(decoded);
+    jwt.verify(token, secretKey);
     next();
   } catch (error) {
     res.status(401).json({ message: "Access denied. Invalid token." });

@@ -1,6 +1,7 @@
 import express from "express";
 import { AppDataSource } from "./data-source";
 import usersRoutes from "./routes/users";
+import authRoutes from "./routes/auth";
 import cookieParser from "cookie-parser";
 
 require("dotenv").config();
@@ -11,6 +12,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/users", usersRoutes);
+app.use("/auth", authRoutes);
 
 app.get("/", (req, res) => {
   res.send("Server running");
