@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { userRepository } from "../repositories/userRepository";
 import { User } from "../entity/User";
+import { validate } from "class-validator";
 
 export const getUsers = async (req: Request, res: Response) => {
   try {
@@ -31,6 +32,13 @@ export const createUser = async (req: Request, res: Response) => {
   }
   try {
     const user = await userRepository.create({ name, email, password });
+    const errors = await validate(user);
+    if (errors.length > 0) {
+      const errorMessages = errors.map(error => {
+        return Object.values(error.constraints || {}).join(", ");
+      });
+      return res.status(400).json({ messages: errorMessages[0] });
+    }
     await userRepository.save(user);
     res.status(201).json(user);
   } catch (error: any) {
