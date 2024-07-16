@@ -10,6 +10,8 @@ import {
   LoginContainer,
 } from "./styles";
 import { useNavigate } from "react-router-dom";
+import { login } from "../../services/authApi";
+import { setCookie } from "nookies";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
@@ -17,13 +19,20 @@ const LoginForm = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setErrorMessage("Teste de erro");
-    alert(`${email} + ${password}`);
-    setTimeout(() => {
-      navigate("/home");
-    }, 3000);
+    if (!email || !password) {
+      return setErrorMessage("Por favor, preencha todos os campos.");
+    }
+    const response = await login(email, password);
+    if (!response.token) {
+      return setErrorMessage(response);
+    }
+    setCookie(null, "token", response.token, {
+      maxAge: 120,
+      path: "/",
+    });
+    navigate("/home");
   };
 
   return (
