@@ -76,9 +76,11 @@ export const updateUser = async (req: Request, res: Response) => {
       user.email = email;
       updatedFields.email = email;
     }
-    if (password && password !== user.password) {
-      user.password = password;
-      updatedFields.password = password;
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      user.password = hashedPassword;
+      updatedFields.password = "password updated";
     }
 
     await userRepository.save(user);
