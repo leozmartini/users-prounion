@@ -1,16 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import UserItem from "../UserItem/UserItem";
 import { Table, ButtonContainer, UserList, StyledH2 } from "./styles";
 import CustomButton from "../CustomButton/CustomButton";
+import useUserList from "../../hooks/useUserList";
 
-const TaskTable: React.FC = () => {
-  const users = [
-    {
-      id: "1",
-      title: "user teste",
-      description: "user 1 description",
-    },
-  ];
+const UserTable: React.FC = () => {
+  const { users, fetchUsers } = useUserList();
+  useEffect(() => {
+    fetchUsers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
@@ -20,8 +19,8 @@ const TaskTable: React.FC = () => {
           <CustomButton onClick={() => alert("add")} icon="plus" color="green" />
         </ButtonContainer>
         <UserList>
-          {users.map(task => (
-            <UserItem key={task.id} />
+          {users.map(user => (
+            <UserItem id={user.id} name={user.name} email={user.email} key={user.id} />
           ))}
         </UserList>
       </Table>
@@ -29,4 +28,4 @@ const TaskTable: React.FC = () => {
   );
 };
 
-export default TaskTable;
+export default UserTable;
