@@ -32,6 +32,10 @@ export const createUser = async (req: Request, res: Response) => {
     return res.status(400).json({ message: "name, email and password are required." });
   }
   try {
+    const existingUser = await userRepository.findOneBy({ email });
+    if (existingUser) {
+      return res.status(409).json({ message: "Email already in use." });
+    }
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await userRepository.create({ name, email, password: hashedPassword });
     const errors = await validate(user);
