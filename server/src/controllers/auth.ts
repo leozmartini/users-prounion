@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { userRepository } from "../repositories/userRepository";
+import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 require("dotenv").config();
 
@@ -15,7 +16,8 @@ export const login = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    if (user.password !== password) {
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
       return res.status(401).json({ message: "Invalid password" });
     }
 

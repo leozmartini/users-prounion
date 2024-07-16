@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { userRepository } from "../repositories/userRepository";
 import { User } from "../entity/User";
 import { validate } from "class-validator";
+import bcrypt from "bcrypt";
 
 export const getUsers = async (req: Request, res: Response) => {
   try {
@@ -31,7 +32,8 @@ export const createUser = async (req: Request, res: Response) => {
     return res.status(400).json({ message: "name, email and password are required." });
   }
   try {
-    const user = await userRepository.create({ name, email, password });
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = await userRepository.create({ name, email, password: hashedPassword });
     const errors = await validate(user);
     if (errors.length > 0) {
       const errorMessages = errors.map(error => {
