@@ -1,7 +1,6 @@
 import React from "react";
-import Header from "./components/Header/Header";
-import UserTable from "./components/UserTable/UserTable";
-import "./index.css";
+import Header from "../components/Header/Header";
+import UserTable from "../components/UserTable/UserTable";
 
 const App: React.FC = () => {
   return (

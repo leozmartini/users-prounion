@@ -4,11 +4,11 @@ import { Table, ButtonContainer, UserList, StyledH2 } from "./styles";
 import CustomButton from "../CustomButton/CustomButton";
 
 const TaskTable: React.FC = () => {
-  const tasks = [
+  const users = [
     {
       id: "1",
-      title: "Task 1",
-      description: "Task 1 description",
+      title: "user teste",
+      description: "user 1 description",
     },
   ];
 
@@ -20,7 +20,7 @@ const TaskTable: React.FC = () => {
           <CustomButton onClick={() => alert("add")} icon="plus" color="green" />
         </ButtonContainer>
         <UserList>
-          {tasks.map(task => (
+          {users.map(task => (
             <UserItem key={task.id} />
           ))}
         </UserList>
