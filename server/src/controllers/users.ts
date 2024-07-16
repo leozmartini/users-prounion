@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { userRepository } from "../repositories/userRepository";
+import { User } from "../entity/User";
 
 export const getUsers = async (req: Request, res: Response) => {
   try {
@@ -34,6 +35,54 @@ export const createUser = async (req: Request, res: Response) => {
     res.status(201).json(user);
   } catch (error: any) {
     console.log(error.message);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const updateUser = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { name, email, password } = req.body;
+
+  try {
+    const user = await userRepository.findOneBy({ id });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const updatedFields: Partial<User> = {};
+
+    if (name && name !== user.name) {
+      user.name = name;
+      updatedFields.name = name;
+    }
+    if (email && email !== user.email) {
+      user.email = email;
+      updatedFields.email = email;
+    }
+    if (password && password !== user.password) {
+      user.password = password;
+      updatedFields.password = password;
+    }
+
+    await userRepository.save(user);
+
+    res.status(200).json(updatedFields);
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const deleteUser = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const user = await userRepository.findOneBy({ id });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    await userRepository.remove(user);
+    res.status(204).json({ message: "User deleted." });
+  } catch (error) {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
