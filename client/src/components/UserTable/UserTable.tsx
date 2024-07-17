@@ -40,7 +40,7 @@ const UserTable: React.FC = () => {
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
-        alert(error);
+        alert(error.message);
       }
     }
   };

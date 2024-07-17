@@ -38,7 +38,8 @@ const Modal: React.FC<ModalProps> = ({
   const [input2Value, setInput2Value] = useState("");
   const [input3Value, setInput3Value] = useState("");
 
-  const handleConfirm = () => {
+  const handleConfirm = (e: React.FormEvent) => {
+    e.preventDefault();
     onConfirm(input1Value, input2Value, input3Value);
   };
 
@@ -50,38 +51,40 @@ const Modal: React.FC<ModalProps> = ({
           <CustomButton onClick={onClose} text="X" color="red" />
         </ModalHeader>
         <ModalDescription>{description}</ModalDescription>
-        <ModalBody>
-          {input1 && (
-            <ModalInput
-              type="text"
-              placeholder={input1}
-              value={input1Value}
-              onChange={e => setInput1Value(e.target.value)}
-              required
-            />
-          )}
-          {input2 && (
-            <ModalInput
-              type="email"
-              placeholder={input2}
-              value={input2Value}
-              onChange={e => setInput2Value(e.target.value)}
-              required
-            />
-          )}
-          {input3 && (
-            <ModalInput
-              type="password"
-              placeholder={input3}
-              value={input3Value}
-              onChange={e => setInput3Value(e.target.value)}
-              required
-            />
-          )}
-        </ModalBody>
-        <ModalButton buttoncolor={buttoncolor} onClick={handleConfirm}>
-          {buttonText || "OK"}
-        </ModalButton>
+        <form onSubmit={handleConfirm}>
+          <ModalBody>
+            {input1 && (
+              <ModalInput
+                type="text"
+                placeholder={input1}
+                value={input1Value}
+                onChange={e => setInput1Value(e.target.value)}
+                required
+              />
+            )}
+            {input2 && (
+              <ModalInput
+                type="email"
+                placeholder={input2}
+                value={input2Value}
+                onChange={e => setInput2Value(e.target.value)}
+                required
+              />
+            )}
+            {input3 && (
+              <ModalInput
+                type="password"
+                placeholder={input3}
+                value={input3Value}
+                onChange={e => setInput3Value(e.target.value)}
+                required
+              />
+            )}
+          </ModalBody>
+          <ModalButton type="submit" buttoncolor={buttoncolor}>
+            {buttonText || "OK"}
+          </ModalButton>
+        </form>
       </ModalContainer>
     </ModalBackground>
   );

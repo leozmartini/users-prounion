@@ -23,7 +23,7 @@ export const createUser = async (name: string, email: string, password: string) 
   } catch (error) {
     if (axios.isAxiosError(error)) {
       if (error.response && error.response.data) {
-        throw new Error(error.response.data.messages);
+        throw new Error(error.response.data.message);
       }
     } else {
       alert("An unexpected error occurred");
