@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Form,
   FormField,
@@ -11,13 +11,21 @@ import {
 } from "./styles";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../services/authApi";
-import { setCookie } from "nookies";
+import { parseCookies, setCookie } from "nookies";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const cookies = parseCookies();
+    if (cookies.token) {
+      navigate("/home");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
