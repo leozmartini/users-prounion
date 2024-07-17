@@ -23,6 +23,9 @@ const App: React.FC = () => {
               estiverem listados. <br />
               Fique a vontade de criar, editar e deletar usuários. <br />
               Recomendamos que você troque a senha de seu usuário após o primeiro login 😉.
+              <br />
+              <br />
+              Seu Token de acesso expira em 2 minutos a partir do login.
             </>
           }
           onConfirm={() => setIsModalOpen(false)}

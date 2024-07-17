@@ -49,7 +49,7 @@ const UserItem: React.FC<UserItemProps> = ({ id, name, email, onUserDeleted, onU
         <div>
           <Title>{email}</Title>
           {isOpen && <Description>{"Nome: " + name}</Description>}
-          {isOpen && <Description>{"id: " + id}</Description>}
+          {isOpen && <Description>{"ID: " + id}</Description>}
           {isOpen && (
             <Description>
               {

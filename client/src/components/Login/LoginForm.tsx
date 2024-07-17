@@ -45,7 +45,6 @@ const LoginForm = () => {
       return setErrorMessage(response);
     }
     setCookie(null, "token", response.token, {
-      maxAge: 120,
       path: "/",
     });
     navigate("/home");

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import UserItem from "../UserItem/UserItem";
-import { Table, ButtonContainer, UserList, StyledH2 } from "./styles";
+import { Table, ButtonContainer, UserList } from "./styles";
 import CustomButton from "../CustomButton/CustomButton";
 import { destroyCookie, parseCookies } from "nookies";
 import { useNavigate } from "react-router-dom";
@@ -65,12 +65,16 @@ const UserTable: React.FC = () => {
 
     setUsers(updatedUsers);
   };
+  const onLogout = () => {
+    destroyCookie(null, "token");
+    navigate("/login", { state: { message: "Sua sessão foi encerrada." } });
+  };
 
   return (
     <>
       <Table>
         <ButtonContainer>
-          <StyledH2>Usuários registrados</StyledH2>
+          <CustomButton onClick={onLogout} text="LogOut" color="red" />
           <CustomButton onClick={() => setIsAddModalOpen(true)} icon="plus" color="green" />
         </ButtonContainer>
         <UserList>
