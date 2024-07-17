@@ -9,8 +9,21 @@ export const getAllUsers = async () => {
     if (axios.isAxiosError(error)) {
       if (error.response && error.response.data) {
         throw new Error(error.response.data.message);
-      } else {
-        alert("An error occurred");
+      }
+    } else {
+      alert("An unexpected error occurred");
+    }
+  }
+};
+
+export const createUser = async (name: string, email: string, password: string) => {
+  try {
+    const response = await api.post("/users", { name, email, password });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response && error.response.data) {
+        throw new Error(error.response.data.messages);
       }
     } else {
       alert("An unexpected error occurred");
