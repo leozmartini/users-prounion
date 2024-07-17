@@ -6,7 +6,7 @@ import { destroyCookie, parseCookies } from "nookies";
 import { useNavigate } from "react-router-dom";
 import Modal from "../Modal/Modal";
 import { toast, Toaster } from "sonner";
-import { createUser, getAllUsers } from "../../services/userApi";
+import { createUser, deleteUser, getAllUsers, updateUser } from "../../services/userApi";
 import useUserList from "../../hooks/useUserList";
 
 const UserTable: React.FC = () => {
@@ -48,12 +48,14 @@ const UserTable: React.FC = () => {
     }
   };
 
-  const onUserDeleted = (id: number) => {
+  const onUserDeleted = async (id: number) => {
+    await deleteUser(id);
     setUsers(users.filter(user => user.id !== id));
   };
 
-  const onUserUpdated = async (id: number, response: object) => {
-    // Atualizar o usuário correspondente no array de usuários
+  const onUserUpdated = async (id: number, email?: string, name?: string, password?: string) => {
+    const response = await updateUser(id, email, name, password);
+
     const updatedUsers = users.map(user => {
       if (user.id === id) {
         return { ...user, ...response };
