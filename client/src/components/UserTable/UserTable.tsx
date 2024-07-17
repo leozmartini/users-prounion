@@ -6,6 +6,7 @@ import useUserList from "../../hooks/useUserList";
 import { destroyCookie, parseCookies } from "nookies";
 import { useNavigate } from "react-router-dom";
 import Modal from "../Modal/Modal";
+import { toast, Toaster } from "sonner";
 
 const UserTable: React.FC = () => {
   const { users, fetchUsers, handleAddUser } = useUserList();
@@ -15,20 +16,19 @@ const UserTable: React.FC = () => {
   const cookies = parseCookies();
 
   useEffect(() => {
-    const fetchData = async () => {
+    (async () => {
       if (cookies.token) {
         try {
           await fetchUsers();
         } catch (error) {
           destroyCookie(null, "token");
-          navigate("/login");
+          navigate("/login", { state: { message: "Sessão expirada. Faça login novamente." } });
+          return;
         }
       } else {
-        navigate("/login");
+        navigate("/login", { state: { message: "Sessão não encontrada. Faça login novamente." } });
       }
-    };
-
-    fetchData();
+    })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cookies.token, navigate]);
 
@@ -37,10 +37,10 @@ const UserTable: React.FC = () => {
       try {
         await handleAddUser(input1Value, input2Value, input3Value);
         setIsAddModalOpen(false);
-
+        toast.success("Usuário cadastrado.");
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
-        alert(error.message);
+        toast.error(error.message);
       }
     }
   };
@@ -71,6 +71,7 @@ const UserTable: React.FC = () => {
           onConfirm={onAddUser}
         />
       )}
+      <Toaster richColors />
     </>
   );
 };

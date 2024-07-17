@@ -9,7 +9,7 @@ import {
   Error,
   LoginContainer,
 } from "./styles";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { login } from "../../services/authApi";
 import { parseCookies, setCookie } from "nookies";
 
@@ -18,6 +18,13 @@ const LoginForm = () => {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state?.message) {
+      setErrorMessage(location.state.message);
+    }
+  }, [location.state, navigate, location.pathname]);
 
   useEffect(() => {
     const cookies = parseCookies();
@@ -44,31 +51,33 @@ const LoginForm = () => {
   };
 
   return (
-    <LoginContainer>
-      <Form onSubmit={handleSubmit}>
-        <Title>Login</Title>
-        {errorMessage && <Error>{errorMessage}</Error>}
-        <FormField>
-          <Label>Email:</Label>
-          <Input
-            type="email"
-            placeholder="Primeiro acesso? use 'admin@prounion.com'"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-          />
-        </FormField>
-        <FormField>
-          <Label>Password:</Label>
-          <Input
-            type="password"
-            placeholder="Primeiro acesso? use 'admin'"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-          />
-        </FormField>
-        <SubmitButton type="submit">Login</SubmitButton>
-      </Form>
-    </LoginContainer>
+    <>
+      <LoginContainer>
+        <Form onSubmit={handleSubmit}>
+          <Title>Login</Title>
+          {errorMessage && <Error>{errorMessage}</Error>}
+          <FormField>
+            <Label>Email:</Label>
+            <Input
+              type="email"
+              placeholder="Primeiro acesso? use 'admin@prounion.com'"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+            />
+          </FormField>
+          <FormField>
+            <Label>Password:</Label>
+            <Input
+              type="password"
+              placeholder="Primeiro acesso? use 'admin'"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+            />
+          </FormField>
+          <SubmitButton type="submit">Login</SubmitButton>
+        </Form>
+      </LoginContainer>
+    </>
   );
 };
 

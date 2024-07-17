@@ -11,7 +11,7 @@ export const getAllUsers = async () => {
         throw new Error(error.response.data.message);
       }
     } else {
-      alert("An unexpected error occurred");
+      throw new Error("Erro inesperado");
     }
   }
 };
@@ -26,7 +26,7 @@ export const createUser = async (name: string, email: string, password: string) 
         throw new Error(error.response.data.message);
       }
     } else {
-      alert("An unexpected error occurred");
+      throw new Error("Erro inesperado");
     }
   }
 };

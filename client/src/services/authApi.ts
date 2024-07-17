@@ -14,6 +14,6 @@ export const login = async (email: string, password: string) => {
         return error.response.data.message;
       }
     }
-    return "An unexpected error occurred";
+    return "Erro inesperado em nosso servidor.";
   }
 };
