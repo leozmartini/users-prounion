@@ -13,13 +13,13 @@ import CustomButton from "../CustomButton/CustomButton";
 
 interface ModalProps {
   title: string;
-  description: string;
+  description: string | JSX.Element;
   buttonText?: string;
   buttoncolor?: string;
   input1?: string;
   input2?: string;
   input3?: string;
-  onClose: () => void;
+  onClose?: () => void;
   onConfirm: (input1Value?: string, input2Value?: string, input3Value?: string) => void;
 }
 
@@ -48,7 +48,7 @@ const Modal: React.FC<ModalProps> = ({
       <ModalContainer>
         <ModalHeader>
           <ModalTitle>{title}</ModalTitle>
-          <CustomButton onClick={onClose} text="X" color="red" />
+          {onClose && <CustomButton onClick={onClose} text="X" color="red" />}
         </ModalHeader>
         <ModalDescription>{description}</ModalDescription>
         <form onSubmit={handleConfirm}>
