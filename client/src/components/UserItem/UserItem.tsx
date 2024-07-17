@@ -14,6 +14,7 @@ interface UserItemProps extends User {
 const UserItem: React.FC<UserItemProps> = ({ id, name, email, onUserDeleted, onUserUpdated }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isUpdateModalOpen, setisUpdateModalOpen] = useState(false);
+  const [isDeleteModalOpen, setisDeleteModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const onDelete = async () => {
@@ -46,13 +47,20 @@ const UserItem: React.FC<UserItemProps> = ({ id, name, email, onUserDeleted, onU
     <>
       <UserItemDiv onClick={() => setIsOpen(!isOpen)}>
         <div>
-          <Title>{`${name}(${email})`}</Title>
-          {isOpen && <Description>{"Password encrypted"}</Description>}
-          {isOpen && <Description>{id}</Description>}
+          <Title>{email}</Title>
+          {isOpen && <Description>{"Nome: " + name}</Description>}
+          {isOpen && <Description>{"id: " + id}</Description>}
+          {isOpen && (
+            <Description>
+              {
+                "Senha criptografada em Hash no banco de dados, por motivos de segurança, não será exibida no client."
+              }
+            </Description>
+          )}
         </div>
         <ButtonContainer>
           <CustomButton onClick={() => setisUpdateModalOpen(true)} color="blue" icon="edit" />
-          <CustomButton onClick={onDelete} color="red" icon="trash" />
+          <CustomButton onClick={() => setisDeleteModalOpen(true)} color="red" icon="trash" />
         </ButtonContainer>
       </UserItemDiv>
       <Toaster richColors />
@@ -67,6 +75,16 @@ const UserItem: React.FC<UserItemProps> = ({ id, name, email, onUserDeleted, onU
           input3="Nova Senha"
           onClose={() => setisUpdateModalOpen(false)}
           onConfirm={onUpdate}
+        />
+      )}
+      {isDeleteModalOpen && (
+        <Modal
+          title="Confirmação de deleção	"
+          description={`Tem certeza que deseja excluír "${name}" ?`}
+          buttonText="Deletar"
+          buttoncolor="red"
+          onClose={() => setisDeleteModalOpen(false)}
+          onConfirm={onDelete}
         />
       )}
     </>
