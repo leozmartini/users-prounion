@@ -43,7 +43,7 @@ export const createUser = async (req: Request, res: Response) => {
       const errorMessages = errors.map(error => {
         return Object.values(error.constraints || {}).join(", ");
       });
-      return res.status(400).json({ messages: errorMessages[0] });
+      return res.status(400).json({ message: errorMessages[0] });
     }
     await userRepository.save(user);
     const userWithoutPassword: Partial<User> = { ...user };
