@@ -11,7 +11,7 @@ const useUserList = () => {
       setUsers(fetchedUsers);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      alert(`fetchTasks error: ${err.message}`);
+      throw new Error(err.message);
     }
   };
 

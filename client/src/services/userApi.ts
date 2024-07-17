@@ -8,7 +8,7 @@ export const getAllUsers = async () => {
   } catch (error) {
     if (axios.isAxiosError(error)) {
       if (error.response && error.response.data) {
-        alert(error.response.data.message);
+        throw new Error(error.response.data.message);
       } else {
         alert("An error occurred");
       }

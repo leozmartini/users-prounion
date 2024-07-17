@@ -3,13 +3,26 @@ import UserItem from "../UserItem/UserItem";
 import { Table, ButtonContainer, UserList, StyledH2 } from "./styles";
 import CustomButton from "../CustomButton/CustomButton";
 import useUserList from "../../hooks/useUserList";
+import { destroyCookie, parseCookies } from "nookies";
+import { useNavigate } from "react-router-dom";
 
 const UserTable: React.FC = () => {
   const { users, fetchUsers } = useUserList();
+  const navigate = useNavigate();
+  const cookies = parseCookies();
   useEffect(() => {
-    fetchUsers();
+    const fetchData = async () => {
+      try {
+        await fetchUsers();
+      } catch (error) {
+        destroyCookie(null, "token");
+        navigate("/login");
+      }
+    };
+
+    fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [cookies]);
 
   return (
     <>
