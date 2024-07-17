@@ -23,6 +23,7 @@ const LoginForm = () => {
   useEffect(() => {
     if (location.state?.message) {
       setErrorMessage(location.state.message);
+      navigate(location.pathname, { replace: true });
     }
   }, [location.state, navigate, location.pathname]);
 

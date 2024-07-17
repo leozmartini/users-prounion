@@ -59,7 +59,6 @@ const Modal: React.FC<ModalProps> = ({
                 placeholder={input1}
                 value={input1Value}
                 onChange={e => setInput1Value(e.target.value)}
-                required
               />
             )}
             {input2 && (
@@ -68,7 +67,6 @@ const Modal: React.FC<ModalProps> = ({
                 placeholder={input2}
                 value={input2Value}
                 onChange={e => setInput2Value(e.target.value)}
-                required
               />
             )}
             {input3 && (
@@ -77,7 +75,6 @@ const Modal: React.FC<ModalProps> = ({
                 placeholder={input3}
                 value={input3Value}
                 onChange={e => setInput3Value(e.target.value)}
-                required
               />
             )}
           </ModalBody>

@@ -2,15 +2,16 @@ import React, { useEffect, useState } from "react";
 import UserItem from "../UserItem/UserItem";
 import { Table, ButtonContainer, UserList, StyledH2 } from "./styles";
 import CustomButton from "../CustomButton/CustomButton";
-import useUserList from "../../hooks/useUserList";
 import { destroyCookie, parseCookies } from "nookies";
 import { useNavigate } from "react-router-dom";
 import Modal from "../Modal/Modal";
 import { toast, Toaster } from "sonner";
+import { createUser, getAllUsers } from "../../services/userApi";
+import useUserList from "../../hooks/useUserList";
 
 const UserTable: React.FC = () => {
-  const { users, fetchUsers, handleAddUser } = useUserList();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const { users, setUsers } = useUserList();
 
   const navigate = useNavigate();
   const cookies = parseCookies();
@@ -19,7 +20,8 @@ const UserTable: React.FC = () => {
     (async () => {
       if (cookies.token) {
         try {
-          await fetchUsers();
+          const fetchedUsers = await getAllUsers();
+          setUsers(fetchedUsers);
         } catch (error) {
           destroyCookie(null, "token");
           navigate("/login", { state: { message: "Sessão expirada. Faça login novamente." } });
@@ -30,12 +32,13 @@ const UserTable: React.FC = () => {
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cookies.token, navigate]);
+  }, [cookies.token]);
 
   const onAddUser = async (input1Value?: string, input2Value?: string, input3Value?: string) => {
     if (input1Value && input2Value && input3Value) {
       try {
-        await handleAddUser(input1Value, input2Value, input3Value);
+        const newUser = await createUser(input1Value, input2Value, input3Value);
+        setUsers([...users, newUser]);
         setIsAddModalOpen(false);
         toast.success("Usuário cadastrado.");
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -43,6 +46,22 @@ const UserTable: React.FC = () => {
         toast.error(error.message);
       }
     }
+  };
+
+  const onUserDeleted = (id: number) => {
+    setUsers(users.filter(user => user.id !== id));
+  };
+
+  const onUserUpdated = async (id: number, response: object) => {
+    // Atualizar o usuário correspondente no array de usuários
+    const updatedUsers = users.map(user => {
+      if (user.id === id) {
+        return { ...user, ...response };
+      }
+      return user;
+    });
+
+    setUsers(updatedUsers);
   };
 
   return (
@@ -54,7 +73,14 @@ const UserTable: React.FC = () => {
         </ButtonContainer>
         <UserList>
           {users.map(user => (
-            <UserItem id={user.id} name={user.name} email={user.email} key={user.id} />
+            <UserItem
+              id={user.id}
+              name={user.name}
+              email={user.email}
+              onUserDeleted={onUserDeleted}
+              onUserUpdated={onUserUpdated}
+              key={user.id}
+            />
           ))}
         </UserList>
       </Table>

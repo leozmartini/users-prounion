@@ -10,6 +10,7 @@ const Redirect = () => {
   useEffect(() => {
     navigate(cookies.token ? "/home" : "/login");
   }, [cookies.token, navigate]);
+  return null;
 };
 
 export default Redirect;
