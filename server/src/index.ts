@@ -1,5 +1,5 @@
 import express from "express";
-import { AppDataSource } from "./data-source";
+import { connectDatabase } from "./data-source";
 import usersRoutes from "./routes/users";
 import authRoutes from "./routes/auth";
 import cookieParser from "cookie-parser";
@@ -18,11 +18,16 @@ app.get("/", (req, res) => {
   res.send("Server running");
 });
 
-AppDataSource.initialize()
-  .then(async () => {
-    console.log("Database connected");
+// Inicia a aplicação apenas com conexão ativa com o banco de dados.
+connectDatabase()
+  .then(connection => {
+    // Salva a conexão com o banco de dados no locals. Assim poderá ser acessada em toda aplicação.
+    app.locals.db = connection;
     app.listen(port, () => {
       console.log(`Server running: ${port}`);
     });
   })
-  .catch(error => console.log(error));
+  .catch(error => {
+    console.error("Erro ao conectar com banco de dados: ", error);
+    process.exit(1);
+  });
