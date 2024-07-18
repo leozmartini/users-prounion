@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { userRepository } from "../repositories/userRepository";
+import { UserRepository } from "../repositories/userRepository";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 require("dotenv").config();
@@ -11,7 +11,8 @@ export const login = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Email and password are required" });
     }
 
-    const user = await userRepository.findOneBy({ email });
+    const userRepository = new UserRepository(req.app.locals.db);
+    const user = await userRepository.findByEmail(email);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -21,8 +22,8 @@ export const login = async (req: Request, res: Response) => {
       return res.status(401).json({ message: "Invalid password" });
     }
 
-    const token = jwt.sign({}, process.env.JWT_SECRET as string, {
-      expiresIn: 120,
+    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET as string, {
+      expiresIn: "2h",
     });
 
     res.json({ token });
