@@ -32,8 +32,7 @@ const LoginForm = () => {
     if (cookies.token) {
       navigate("/home");
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [navigate]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -57,8 +56,9 @@ const LoginForm = () => {
           <Title>Login</Title>
           {errorMessage && <Error>{errorMessage}</Error>}
           <FormField>
-            <Label>Email:</Label>
+            <Label htmlFor="email">Email:</Label>
             <Input
+              id="email"
               type="email"
               placeholder="Primeiro acesso? use 'admin@prounion.com'"
               value={email}
@@ -66,8 +66,9 @@ const LoginForm = () => {
             />
           </FormField>
           <FormField>
-            <Label>Password:</Label>
+            <Label htmlFor="password">Password:</Label>
             <Input
+              id="password"
               type="password"
               placeholder="Primeiro acesso? use 'admin'"
               value={password}
