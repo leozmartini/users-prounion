@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-require("dotenv").config();
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const validateToken = (req: Request, res: Response, next: NextFunction) => {
   const token = req.cookies.token;
