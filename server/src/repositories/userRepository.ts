@@ -63,14 +63,12 @@ export class UserRepository {
     `;
     await this.db.execute(createTableQuery);
 
-    // Define o usuário inicial
     const initialUser = {
       name: "Admin",
       email: "admin@prounion.com",
       password: "$2b$10$Le7Q5O.rZq.gtIlRix5ZyOiBfSDGhwOEEo/xpLLamPW/wP62JvuLO",
     };
 
-    // Verifica se o usuário inicial já existe
     const existingUser = await this.findByEmail(initialUser.email);
 
     !existingUser && (await this.create(initialUser));
