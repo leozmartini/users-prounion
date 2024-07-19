@@ -1,5 +1,6 @@
 import { User } from "../entity/User";
 import { Connection } from "mysql2/promise";
+import * as mysql from "mysql2/promise";
 
 export class UserRepository {
   // Define a conexão com o banco de dados para toda a classe.
@@ -25,12 +26,14 @@ export class UserRepository {
     return results.length > 0 ? (results[0] as User) : null;
   }
 
-  async create(user: Omit<User, "id">): Promise<void> {
-    await this.db.execute("INSERT INTO users (name, email, password) VALUES (?, ?, ?)", [
-      user.name,
-      user.email,
-      user.password,
-    ]);
+  async create(user: Omit<User, "id">): Promise<number> {
+    const [result] = await this.db.execute(
+      "INSERT INTO users (name, email, password) VALUES (?, ?, ?)",
+      [user.name, user.email, user.password]
+    );
+
+    const id = (result as mysql.ResultSetHeader).insertId;
+    return id;
   }
 
   async update(id: number, user: Partial<Omit<User, "id">>): Promise<void> {

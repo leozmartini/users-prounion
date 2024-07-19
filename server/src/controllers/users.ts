@@ -40,8 +40,8 @@ export const createUser = async (req: Request, res: Response) => {
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     const user: Omit<User, "id"> = { name, email, password: hashedPassword };
-    await userRepository.create(user);
-    res.status(201).json(user);
+    const id = await userRepository.create(user);
+    res.status(201).json({ id, ...user });
   } catch (error: any) {
     console.log(error.message);
     res.status(500).json({ message: "Internal Server Error" });
