@@ -13,7 +13,6 @@ const connectionConfig = {
 export const connectDatabase = async () => {
   try {
     const connection = await mysql.createConnection(connectionConfig);
-    console.log("Database connected");
 
     // Fecha o servidor caso ocorra algum erro na conexão com o banco de dados.
     connection.on("error", err => {
