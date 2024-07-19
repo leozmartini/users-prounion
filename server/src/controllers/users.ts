@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { UserRepository } from "../repositories/userRepository";
 import { User } from "../entity/User";
 import bcrypt from "bcrypt";
+import { isValidEmail } from "../helpers/validateEmail";
 
 export const getUsers = async (req: Request, res: Response) => {
   try {
@@ -32,6 +33,7 @@ export const createUser = async (req: Request, res: Response) => {
   if (!name || !email || !password) {
     return res.status(400).json({ message: "name, email and password are required." });
   }
+  if (!isValidEmail(email)) return res.status(400).json({ message: "Email inválido" });
   try {
     const userRepository = new UserRepository(req.app.locals.db);
     const existingUser = await userRepository.findByEmail(email);
@@ -52,6 +54,7 @@ export const updateUser = async (req: Request, res: Response) => {
   const { id } = req.params;
   const { name, email, password } = req.body;
 
+  if (email && !isValidEmail(email)) return res.status(400).json({ message: "Email inválido" });
   try {
     const userRepository = new UserRepository(req.app.locals.db);
     const user = await userRepository.findById(Number(id));

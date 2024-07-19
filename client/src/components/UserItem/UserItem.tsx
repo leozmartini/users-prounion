@@ -39,6 +39,7 @@ const UserItem: React.FC<UserItemProps> = ({ id, name, email, onUserDeleted, onU
       toast.success("Usuário atualizado.");
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
+      if (error.message === "expeted error") return;
       navigate("/login", { state: { message: "Sessão expirada. Faça login novamente." } });
     }
   };
