@@ -1,18 +1,28 @@
-import "reflect-metadata";
-import { DataSource } from "typeorm";
-import { User } from "./entity/User";
-require("dotenv").config();
+import mysql from "mysql2/promise";
+import dotenv from "dotenv";
 
-export const AppDataSource = new DataSource({
-  type: "mysql",
+dotenv.config();
+
+const connectionConfig = {
   host: process.env.MYSQL_HOST,
-  port: Number(process.env.MYSQL_PORT),
-  username: process.env.MYSQL_USER,
+  user: process.env.MYSQL_USER,
   password: process.env.MYSQL_PASSWORD,
   database: process.env.MYSQL_DATABASE,
-  synchronize: true,
-  logging: false,
-  entities: [User],
-  migrations: [],
-  subscribers: [],
-});
+};
+
+export const connectDatabase = async () => {
+  try {
+    const connection = await mysql.createConnection(connectionConfig);
+
+    // Fecha o servidor caso ocorra algum erro na conexão com o banco de dados.
+    connection.on("error", err => {
+      console.error("Database connection error:", err);
+      process.exit(1);
+    });
+
+    return connection;
+  } catch (error) {
+    console.error("Problema de conexão com banco de dados:", error);
+    process.exit(1);
+  }
+};
