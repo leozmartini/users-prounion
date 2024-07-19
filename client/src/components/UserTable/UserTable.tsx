@@ -18,6 +18,8 @@ const UserTable: React.FC = () => {
 
   useEffect(() => {
     (async () => {
+      // Verifica se o usuário tem um token. Se não tiver redireciona para a página de login
+      // A página que pode ser renderizada não possui dados sensíveis.
       if (cookies.token) {
         try {
           const fetchedUsers = await getAllUsers();

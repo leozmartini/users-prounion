@@ -17,6 +17,7 @@ const UserItem: React.FC<UserItemProps> = ({ id, name, email, onUserDeleted, onU
   const [isDeleteModalOpen, setisDeleteModalOpen] = useState(false);
   const navigate = useNavigate();
 
+  // Gatilho para deletar o usuário na Table
   const onDelete = async () => {
     try {
       await onUserDeleted(id);
@@ -28,6 +29,7 @@ const UserItem: React.FC<UserItemProps> = ({ id, name, email, onUserDeleted, onU
     }
   };
 
+  // Gatilho para atualizar os dados do usuário na Table
   const onUpdate = async (input1Value?: string, input2Value?: string, input3Value?: string) => {
     try {
       if (!input1Value && !input2Value && !input3Value) {

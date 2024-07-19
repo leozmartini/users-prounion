@@ -8,7 +8,7 @@ const validateToken = (req: Request, res: Response, next: NextFunction) => {
   const token = req.cookies.token;
 
   if (!token) {
-    return res.status(401).json({ message: "Access denied. No token provided." });
+    return res.status(401).json({ message: "Acesso negado. Token não encontrado." });
   }
 
   try {
@@ -16,7 +16,7 @@ const validateToken = (req: Request, res: Response, next: NextFunction) => {
     jwt.verify(token, secretKey);
     next();
   } catch (error) {
-    res.status(401).json({ message: "Access denied. Invalid token." });
+    res.status(401).json({ message: "Acesso negado. Token expirado." });
   }
 };
 

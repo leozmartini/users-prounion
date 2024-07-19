@@ -20,6 +20,7 @@ const LoginForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Verifica se tem alguma mensagem de erro no location.state
   useEffect(() => {
     if (location.state?.message) {
       setErrorMessage(location.state.message);
@@ -27,6 +28,7 @@ const LoginForm = () => {
     }
   }, [location.state, navigate, location.pathname]);
 
+  // Verifica se o usuário tem um token
   useEffect(() => {
     const cookies = parseCookies();
     if (cookies.token) {
@@ -43,6 +45,8 @@ const LoginForm = () => {
     if (!response.token) {
       return setErrorMessage(response);
     }
+
+    // Seta o token no cookie e redireciona para a página home
     setCookie(null, "token", response.token, {
       path: "/",
     });
