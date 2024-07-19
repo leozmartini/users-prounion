@@ -58,5 +58,4 @@ initDb()
   })
   .catch(error => {
     console.error("Erro ao conectar com banco de dados: ", error.code);
-    // Em vez de encerrar o processo, pode-se tentar novamente ou realizar outra ação de recuperação
   });
