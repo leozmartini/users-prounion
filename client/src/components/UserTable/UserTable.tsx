@@ -18,6 +18,8 @@ const UserTable: React.FC = () => {
 
   useEffect(() => {
     (async () => {
+      // Verifica se o usuário tem um token. Se não tiver redireciona para a página de login
+      // A página que pode ser renderizada não possui dados sensíveis.
       if (cookies.token) {
         try {
           const fetchedUsers = await getAllUsers();
@@ -54,17 +56,26 @@ const UserTable: React.FC = () => {
   };
 
   const onUserUpdated = async (id: number, email?: string, name?: string, password?: string) => {
-    const response = await updateUser(id, email, name, password);
+    try {
+      const response = await updateUser(id, email, name, password);
 
-    const updatedUsers = users.map(user => {
-      if (user.id === id) {
-        return { ...user, ...response };
-      }
-      return user;
-    });
+      const updatedUsers = users.map(user => {
+        if (user.id === id) {
+          return { ...user, ...response };
+        }
+        return user;
+      });
 
-    setUsers(updatedUsers);
+      setUsers(updatedUsers);
+      setIsAddModalOpen(false);
+      toast.success("User updated successfully");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      toast.error(error.message);
+      throw new Error("expeted error");
+    }
   };
+
   const onLogout = () => {
     destroyCookie(null, "token");
     navigate("/login", { state: { message: "Sua sessão foi encerrada." } });
