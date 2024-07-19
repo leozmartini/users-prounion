@@ -23,14 +23,15 @@ app.get("/", (req, res) => {
 const initDb = async () => {
   let connected = false;
   let connection;
+
   // Loop para tentar conexão com database
   while (!connected) {
     try {
       connection = await connectDatabase();
       connected = true;
       console.log("Database conectado.");
-    } catch (error) {
-      console.error("Failed to connect to the database:", error);
+    } catch (error: any) {
+      console.error("Failed to connect to the database:", error.code);
       await new Promise(resolve => setTimeout(resolve, 5000));
     }
   }
@@ -56,6 +57,6 @@ initDb()
     });
   })
   .catch(error => {
-    console.error("Erro ao conectar com banco de dados: ", error);
-    process.exit(1);
+    console.error("Erro ao conectar com banco de dados: ", error.code);
+    // Em vez de encerrar o processo, pode-se tentar novamente ou realizar outra ação de recuperação
   });
