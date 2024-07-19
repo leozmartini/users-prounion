@@ -15,8 +15,8 @@ export class UserRepository {
     return this.executeQuery("SELECT * FROM users") as Promise<User[]>;
   }
 
-  async findById(id: string): Promise<User | null> {
-    const results = await this.executeQuery("SELECT * FROM users WHERE id = ?", [id]);
+  async findById(id: number): Promise<User | null> {
+    const results = (await this.executeQuery("SELECT * FROM users WHERE id = ?", [id])) || [];
     return results.length > 0 ? (results[0] as User) : null;
   }
 
@@ -33,7 +33,7 @@ export class UserRepository {
     ]);
   }
 
-  async update(id: string, user: Partial<Omit<User, "id">>): Promise<void> {
+  async update(id: number, user: Partial<Omit<User, "id">>): Promise<void> {
     // Define quantas "?" serão necessárias para a quantidade de campos a serem atualizados
     const fieldsToUpdate = Object.keys(user)
       .map(field => `${field} = ?`)
@@ -48,7 +48,7 @@ export class UserRepository {
     await this.db.execute(query, valuesToUpdate);
   }
 
-  async delete(id: string): Promise<void> {
+  async delete(id: number): Promise<void> {
     await this.db.execute("DELETE FROM users WHERE id = ?", [id]);
   }
 }
