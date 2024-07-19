@@ -1,13 +1,15 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import { UserConfig } from "vite"; // Importa o tipo UserConfig
+import { UserConfig } from "vite";
 
 // https://vitejs.dev/config/
 export default defineConfig({
   server: {
+    port: 5173,
+    host: true,
     proxy: {
       "/api": {
-        target: "http://localhost:8000",
+        target: process.env.VITE_API_URL || "http://localhost:8000",
         rewrite: path => path.replace(/^\/api/, ""),
       },
     },

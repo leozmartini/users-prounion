@@ -51,4 +51,28 @@ export class UserRepository {
   async delete(id: number): Promise<void> {
     await this.db.execute("DELETE FROM users WHERE id = ?", [id]);
   }
+
+  public async startDatabase(): Promise<void> {
+    const createTableQuery = `
+      CREATE TABLE IF NOT EXISTS users (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        email VARCHAR(255) NOT NULL UNIQUE,
+        password VARCHAR(255) NOT NULL
+      )
+    `;
+    await this.db.execute(createTableQuery);
+
+    // Define o usuário inicial
+    const initialUser = {
+      name: "Admin",
+      email: "admin@prounion.com",
+      password: "$2b$10$Le7Q5O.rZq.gtIlRix5ZyOiBfSDGhwOEEo/xpLLamPW/wP62JvuLO",
+    };
+
+    // Verifica se o usuário inicial já existe
+    const existingUser = await this.findByEmail(initialUser.email);
+
+    !existingUser && (await this.create(initialUser));
+  }
 }
