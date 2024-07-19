@@ -14,15 +14,14 @@ export const connectDatabase = async () => {
   try {
     const connection = await mysql.createConnection(connectionConfig);
 
-    // Fecha o servidor caso ocorra algum erro na conexão com o banco de dados.
+    // Pode ser interessante adicionar um evento de erro no caso de perda de conexão
     connection.on("error", err => {
       console.error("Database connection error:", err);
-      process.exit(1);
     });
 
     return connection;
   } catch (error) {
-    console.error("Problema de conexão com banco de dados:", error);
-    process.exit(1);
+    console.error("O servidor irá tentar uma nova conexão.");
+    throw error;
   }
 };
