@@ -45,6 +45,9 @@ const UserTable: React.FC = () => {
         toast.success("Usuário cadastrado.");
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
+        if (error.message.includes("Token")) {
+          navigate("/login", { state: { message: "Seu token expirou." } });
+        }
         toast.error(error.message);
       }
     }
