@@ -43,7 +43,11 @@ export const createUser = async (req: Request, res: Response) => {
       return res.status(409).json({ message: "Este email ja foi cadastrado" });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user: Omit<User, "id"> = { name, email, password: hashedPassword };
+    const user: Omit<User, "id"> = {
+      name,
+      email,
+      password: "A senha foi salva em hash com sucesso.",
+    };
     const id = await userRepository.create(user);
     res.status(201).json({ id, ...user });
   } catch (error: any) {
@@ -56,7 +60,7 @@ export const updateUser = async (req: Request, res: Response) => {
   const { id } = req.params;
   const { name, email, password } = req.body;
 
-  if (!isValidName(name)) return res.status(400).json({ message: "Nome inválido" });
+  if (name && !isValidName(name)) return res.status(400).json({ message: "Nome inválido" });
   if (email && !isValidEmail(email)) return res.status(400).json({ message: "Email inválido" });
   try {
     const userRepository = new UserRepository(req.app.locals.db);
@@ -76,9 +80,11 @@ export const updateUser = async (req: Request, res: Response) => {
     }
     if (password) {
       const isPasswordValid = await bcrypt.compare(password, user.password);
+
+      // Se ela não é valida, então é diferente da senha atual
       if (!isPasswordValid) {
         const hashedPassword = await bcrypt.hash(password, 10);
-        updatedFields.password = hashedPassword;
+        updatedFields.password = "Senha atualizada";
       }
     }
 
