@@ -21,7 +21,7 @@ const UserItem: React.FC<UserItemProps> = ({ id, name, email, onUserDeleted, onU
   const onDelete = async () => {
     try {
       await onUserDeleted(id);
-      toast.success("User deleted successfully");
+      toast.success("Usuário deletado com sucesso");
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
